@@ -1,5 +1,7 @@
 *.pyc
 *.db
+*.*~
+settings_asheville.py
 local_tiles/*
 media/*
 static/Nodes/*
