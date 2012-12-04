@@ -44,8 +44,8 @@ DATABASES = {
     'default': {
         'NAME': 'ashevilletrees',
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'USER': 'postgres',                      # Not used with sqlite3.
-        'PASSWORD': 'pgAdmin11',                  # Not used with sqlite3.
+        'USER': '',                      # Not used with sqlite3.
+        'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '192.168.0.91',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '5432',
     }
@@ -71,7 +71,7 @@ ADMIN_MEDIA_PREFIX = '/admin_media/'
 STATIC_DATA = os.path.join(os.path.dirname(__file__), 'static/')
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = 'dudewheresmytrees'
+SECRET_KEY = ''
 
 
 TEMPLATE_DIRS = (
