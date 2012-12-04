@@ -78,11 +78,11 @@ var tm = {
         },
     trackEvent: function(category, action, label, value) {
        
-        _gaq.push(['_trackEvent', category, action, label, value]);
+        //_gaq.push(['_trackEvent', category, action, label, value]);
         
     },
     trackPageview: function(url) {        
-        _gaq.push(['_trackPageview', url]);        
+        //_gaq.push(['_trackPageview', url]);        
     },
     baseTemplatePageLoad:function() {
         //document.namespaces;
@@ -560,6 +560,15 @@ var tm = {
                 singleClick(mapCoord)
                 },500); 
         });
+
+        tm.map.events.register("click", tm.map, function (e) {
+            var mapCoord = tm.map.getLonLatFromViewPortPx(e.xy);
+            mapCoord.transform(tm.map.getProjectionObject(), new OpenLayers.Projection("EPSG:4326"));           
+            tm.clckTimeOut = window.setTimeout(function() {
+                singleClick(mapCoord)
+                },500); 
+        });
+
                 
         function singleClick(olLonlat) { 
             window.clearTimeout(tm.clckTimeOut); 
@@ -770,7 +779,7 @@ var tm = {
             jQuery.getJSON(tm_static + 'trees/location/',
                 {'lat': mapCoord.lat, 'lon' : mapCoord.lon, 'format' : 'json', 'max_trees' : 1},
                 function(json) {
-                    var html = '<a href="/trees/' + json.features[0].properties.id + '">Tree #' + json.features[0].properties.id + '</a>';
+                    var html = '<a href='+tm_static + 'trees/' + json.features[0].properties.id + '>Tree #' + json.features[0].properties.id + '</a>';
                     $('#alternate_tree_div').html(html);
                 }
             );
@@ -962,10 +971,10 @@ var tm = {
                             $.each(geojson.features, function(i,f){
                                 var tree = $('#nearby_trees');
                                 if (f.properties.common_name){
-                                    tree.append("<div class='nearby_tree_info'><a href='/trees/" + f.properties.id + "' target='_blank'>" + f.properties.common_name + " (#" + f.properties.id + ")</a><br><span class='nearby_tree_scientific'>" + f.properties.scientific_name + "</span></div>");
+                                    tree.append("<div class='nearby_tree_info'><a href="+ tm_static +"trees/" + f.properties.id + " target='_blank'>" + f.properties.common_name + " (#" + f.properties.id + ")</a><br><span class='nearby_tree_scientific'>" + f.properties.scientific_name + "</span></div>");
                                 }
                                 else {
-                                    tree.append("<div class='nearby_tree_info'><a href='/trees/" + f.properties.id + "' target='_blank'>No species information (#" + f.properties.id + ")</a></div>")
+                                    tree.append("<div class='nearby_tree_info'><a href="+ tm_static +"trees/" + f.properties.id + " target='_blank'>No species information (#" + f.properties.id + ")</a></div>")
                                 }
                                 if (f.properties.current_dbh){
                                     tree.append("<div class='nearby_tree_diameter'>Diameter: " + f.properties.current_dbh + " inches</div>");
@@ -1070,7 +1079,8 @@ var tm = {
                 var tree = json.features[0];
                 var p = tree.properties;
                 var coords = tree.geometry.coordinates;
-                
+                //var jsonStringtest = JSON.stringify(json);
+		//alert(jsonStringtest);
                 //remove old markers
                 if (tm.tree_detail_marker) {tm.misc_markers.removeMarker(tm.tree_detail_marker);}
                 
@@ -1087,7 +1097,7 @@ var tm = {
                 
                 
                 var ll = tm.tree_detail_marker.lonlat;
-                
+
                 popup = new OpenLayers.Popup.FramedCloud("Tree Info",
                    ll,
                    null,
@@ -1099,9 +1109,9 @@ var tm = {
                 popup.autoSize = true;
                 popup.panMapIfOutOfView = true;
                 tm.map.addPopup(popup, true);
-                
+
                 tm.trackEvent('Search', 'Map Detail', 'Tree', p.id);
-                
+    
                 if (!p.address_street) {
                     latlng = new google.maps.LatLng(coords[1], coords[0])
                     tm.geocoder.geocode({
@@ -1153,6 +1163,7 @@ var tm = {
     display_summaries : function(summaries){
         //var callout = ['You selected ', summaries.total_trees, ' trees'].join('');
         //jQuery('#callout').html(callout);
+        //alert("test");
         jQuery(".tree_count").html(tm.addCommas(parseInt(summaries.total_trees)));
         if (summaries.total_trees == '0')
         {
@@ -1668,7 +1679,9 @@ var tm = {
         '1': 'Landmark Tree',
         '2': 'Local Carbon Fund',
         '3': 'Fruit Gleaning Project',
-        '4': 'Historically Significant Tree'
+        '4': 'Historically Significant Tree',
+        '5': 'Asheville Greenworks Treasure Tree',
+        '6': 'Bee Favorite'
     },
     searchParams: {},
     pageLoadSearch: function () {

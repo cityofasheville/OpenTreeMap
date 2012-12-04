@@ -16,6 +16,7 @@ div.olLayerDiv {
 .olLayerGoogleCopyright {
     left: 2px;
     bottom: 2px;  
+    bottom: 2px;  
 }
 .olLayerGoogleV3.olLayerGoogleCopyright {
     right: auto !important;

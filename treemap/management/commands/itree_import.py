@@ -6,7 +6,7 @@ from datetime import datetime
 from dbfpy import dbf
 from optparse import make_option
 from django.core.management.base import BaseCommand, CommandError
-from UrbanForestMap.treemap.models import Resource
+from OpenTreeMap.treemap.models import Resource
 
 class Command(BaseCommand):
     args = '<input_file_name, column_name>'
@@ -48,9 +48,18 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:    
             self.file_name = args[0]
+            print self.file_name
             self.column_name = args[1]
-            in_file = dirname(__file__) + "/" + self.file_name
-            err_file = dirname(__file__) + "/" + self.file_name + ".err"
+            in_file =  self.file_name
+            print in_file
+            err_file =  self.file_name + ".err"
+            print ' '
+            print ' '
+            print ' '
+            print err_file
+            print ' '
+            print ' '
+            print ' '
             self.verbose = options.get('verbose')
         except:
             print "Arguments:  Input_File_Name.[dbf|csv], column name"
@@ -101,7 +110,7 @@ class Command(BaseCommand):
             
         #species data but no match, add it
         self.log_verbose("  Adding unknown species code %s " % code) 
-        resource = Resource(meta_species=code, region="NorthernCalifornia")
+        resource = Resource(meta_species=code, region="Asheville")
         return (True, resource)
 
     

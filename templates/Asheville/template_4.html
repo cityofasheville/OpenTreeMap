@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% load thumbnail %} 
+
+
+{% block body_load %} {% endblock %}
+
+{% block tophead %}
+
+{% endblock %}
+{% block extrahead %}
+<script type="text/javascript">
+    jQuery().ready(function() {
+        tm_urls.tc_url = '{{ TC_URL }}'
+        tm.initial_location_string = "City of Asheville";
+        tm.initial_species_string = "All trees";
+        {% comment %}
+        //tm.neighborhoods = {{ neighborhoods|safe }};
+        //tm.districts = {{ districts|safe }};
+        {% endcomment %}
+        {% block extra_onready %}
+        {% endblock %}
+     });
+</script>
+{% endblock %}
+
+{% block content %}
+    
+        <div id="home">
+ 
+        	<div id="t4_top_content">
+          
+
+            
+
+          
+		<div id="home_callouts">
+
+		  <div id="home_tree_hoods" class="home_container">
+		    <h3>Yearly economic impact summary</h3>
+		      <div class="tree_stat_group">
+			<div class="home_callouts_heading" >Total Trees</div>
+			<div class="home_callouts_data" >
+				{{feeds.benefits.total_trees|floatformat:0|intcomma}}
+			</div>
+   		      </div>
+		      <div class="tree_stat_group">
+			<div class="home_callouts_heading" >Total Benefts</div>
+			<div class="home_callouts_data" >
+				${{feeds.benefits.benefits.total|floatformat:2|intcomma}} saved
+			</div>
+   		      </div>
+
+		<!--
+		      <div class="tree_stat_group">
+			<div class="home_callouts_heading" >Carbon dioxide stored</div>
+			<div class="home_callouts_data" >
+				{{feeds.benefits.total_co2_stored|floatformat:0|intcomma}} lbs CO2 stored to date
+			</div></br>
+   		      </div>
+		-->
+		      <div class="tree_stat_group">
+			<div class="home_callouts_heading" >Carbon dioxide stored</div>
+			<div class="home_callouts_data" >
+				{{feeds.benefits.annual_co2_sequestered|floatformat:0|intcomma}} lbs CO2 stored
+			</div></br>
+			<div class="home_callouts_heading" >&nbsp;</div>
+			<div class="home_callouts_data" >${{feeds.benefits.benefits.co2_stored|floatformat:2|intcomma}} saved</div>
+   		      </div>
+
+
+		      <div class="tree_stat_group">
+			<div class="home_callouts_heading" >Greenhouse Gas Benefits</div>
+			<div class="home_callouts_data" >
+				{{feeds.benefits.annual_co2_avoided|floatformat:0|intcomma}} lbs CO2 reduced
+			</div></br>
+			<div class="home_callouts_heading" >&nbsp;</div>
+			<div class="home_callouts_data" >${{feeds.benefits.benefits.greenhouse|floatformat:2|intcomma}} saved</div>
+   		      </div>
+
+
+		      <div class="tree_stat_group">
+			<div class="home_callouts_heading" >Water Benefits</div>
+			<div class="home_callouts_data" >
+				${{feeds.benefits.annual_stormwater_management|floatformat:0|intcomma}}  gallons conserved
+			</div></br>
+			<div class="home_callouts_heading" >&nbsp;</div>
+			<div class="home_callouts_data" >{{feeds.benefits.benefits.water|floatformat:2|intcomma}} saved</div>
+   		      </div>
+
+		      <div class="tree_stat_group">
+			<div class="home_callouts_heading" >Energy Benefits</div>
+			<div class="home_callouts_data" >
+				{{feeds.benefits.annual_electricity_conserved|floatformat:0|intcomma}} kWh conserved
+			</div></br>
+			<div class="home_callouts_heading" >&nbsp;</div>
+			<div class="home_callouts_data" >${{feeds.benefits.benefits.energy|floatformat:2|intcomma}} saved</div>
+   		      </div>
+		<!--
+		      <div class="tree_stat_group">
+			<div class="home_callouts_heading" >Natural Gas Benefits</div>
+			<div class="home_callouts_data" >
+				{{feeds.benefits.annual_natural_gas_conserved|floatformat:0|intcomma}} kWh conserved
+			</div></br>
+			<div class="home_callouts_heading" >&nbsp;</div>
+			<div class="home_callouts_data" >${{feeds.benefits.benefits.natural_gas|floatformat:2|intcomma}} saved</div>
+   		      </div>
+	-->
+
+		      <div class="tree_stat_group">
+			<div class="home_callouts_heading" >Air Quality Benefits</div>
+			<div class="home_callouts_data" >
+				{{feeds.benefits.annual_air_quality_improvement|floatformat:0|intcomma}} lbs pollutants reduced
+			</div></br>
+			<div class="home_callouts_heading" >&nbsp;</div>
+			<div class="home_callouts_data" >${{feeds.benefits.benefits.air_quality|floatformat:2|intcomma}} saved</div>
+   		      </div>
+
+			<!-- eco impact {{feeds.benefits.econimc_impact|floatformat:2}}</br>
+			stormwater{{feeds.benefits.annual_stormwater_management|floatformat:0}}</br>
+			${{feeds.benefits.benefits_water|floatformat:2}}</br> -->
+
+			<!-- {{feeds.benefits.get_benefits}}</br>
+			{{feeds.benefits.distinct_species}}</br> -->
+
+		  </div>
+
+
+		  <div id="home_tree_stats" class="home_container">
+		    <h3>10 Most Common Trees</h3>
+		      {% for trees in feeds.species %}
+
+		      <div class="tree_stat_group">
+			
+			<div style="float:left;width:200px;" ><div class="treet_stat_number"> {{forloop.counter}}&nbsp;</div><a class="home_callouts_heading_a" href="{% url treemap.views.result_map %}#?species={{trees.id}}">{{trees}}&nbsp;&raquo;</a></div>
+			<div style="float:right;"><a class="home_callouts_data"  href="{% url treemap.views.result_map %}#?species={{trees.id}}">{{trees.tree_count}} </a></div>
+		      </div>
+		      {% endfor %}
+		  </div>    
+
+	{% if feeds.latest_trees.count > 0 %}
+		  <div id="home_tree_stats" class="home_container">
+		    <h3>5 Most Recent Trees</h3>
+					<p>Our database of trees comes from public records and citizen foresters like you.
+					    Your help will make it better. <!--<a href="#">Find out how to add and edit trees near you!</a>-->
+					</p>
+					<table width="100%">
+						{% for tree in feeds.latest_trees %}
+						    <tr>
+							<td class="image"><a href="{% url treemap_tree_detail tree.id %}">
+
+							{% if tree.last_updated_by.get_profile.photo %}
+							    <img src="{% thumbnail tree.last_updated_by.get_profile.photo 32x32 crop %}"
+								alt="image description" width="33" height="32" /></td>
+							{% else %}
+							    <img src="{{ STATIC_URL }}images/v2/defaultuser.gif" alt="image description" width="33" height="32" /></td>
+							{% endif %}
+
+							<td>
+							    <span>Neighborhood</span>  <br />
+
+							    {{tree.neighborhood.all.0}}
+							</td>
+							<td>
+							    <span>Tree species</span>  <br />
+
+							    <em>{{tree.species.common_name}}</em>
+							</td>
+							<td>
+							    <span>Updated by</span>  <br />
+
+							    <a href="{% url profiles.views.profile_detail tree.last_updated_by.username %}">{{ tree.last_updated_by.username }}</a>
+							</td>
+						    </tr>
+						{% endfor %}
+					</table>
+		  </div>    
+	{%endif%}
+		  
+
+		</div>
+
+		<div id="home_content">  
+				<div id="AppDirectionsSumContainer">
+				    <div class="fourRows"> 
+					<h2 class="title" >&nbsp;How to use the Asheville Tree Map</h2> 
+					<div class="box"> 
+					   
+					    <p> <div class="number">1</div> <span class="mark"><a href="{{ SITE_ROOT }accounts/login/">Login</a></span>: 
+							<span class="appdirdesc"><a href="{{ SITE_ROOT }}accounts/login/">Login</a> using your Asheville Tree Map user name (login) or <a href="{{ SITE_ROOT }}accounts/register/">Sign up</a> for a Asheville Tree map user name (login).
+						<a href="{{ SITE_ROOT }}accounts/register/" class="more">Go  &raquo;</a></p></span> 
+					</div> 
+					<div class="box"> 
+					    <p><div class="number">2</div> <span class="mark"><a href="{% url treemap.views.result_map %}">Find a tree</a></span>: 
+							<span class="appdirdesc">Search for the trees near you. Find trees that bear edible fruits and nuts or those with beautiful flowers. Search for the biggest trees in your neighborhood -- then go visit them! 
+						<a href="{% url treemap.views.result_map %}#?advanced=open" class="more">Go  &raquo;</a></p></span> 
+					</div> 
+					<div class="box"> 
+					    <p><div class="number">3</div><span class="mark"><a href="{% url treemap.views.tree_add %}/">Add a tree</a></span>: 
+							<span class="appdirdesc">The Asheville Tree Map grows as citizen foresters like you add trees. Show a tree's location by putting a dot on the map, then  provide as much information as you can.
+						<a href="{% url treemap.views.tree_add %}/" class="more">Go  &raquo;</a></p> </span> 
+					</div> 
+					<div class="box" id="boxLast"> 
+					    <p><div class="number">4</div><span class="mark"><a href="{% url treemap.views.result_map %}">Edit a tree</a></span>: 
+							<span class="appdirdesc">Check out the facts about the trees around you and update when you can. Don't forget to add alerts! With your help, we'll track changes in the urban forest and watch it grow. 
+						<a href="{% url treemap.views.result_map %}" class="more">Go  &raquo;</a></p></span> 
+					</div> 
+				    </div> 
+
+
+                </div>
+
+
+	{% if feeds.latest_trees.count > 0 %}
+		  <div id="home_tree_stats" class="home_container">
+				<div class="box-2">
+<div class="title">
+					<h3>5 most Recent photos from users</h3>
+</div>
+					 <p/>
+					<ul class="photos">
+						{{ latest_photos }}
+						{% for pic in feeds.recent_photos %}
+						<li>
+						    <a href="{% url treemap.views.trees pic.tree.id %}">
+							<img src="{{ SITE_ROOT }}{% thumbnail pic.photo 43x42 %}" alt="image description" width="43" height="42" />
+						    </a>
+						</li>
+						{% endfor %}
+
+					</ul>
+				</div>
+		  </div>    
+	{%endif%}
+		  
+
+			<!-- <h1>Mapping Asheville's trees and growing a green future together</h1>
+
+			<h2>AshevilleTreeMap is a web-based map database of trees in the greater Asheville region.</h2>
+
+			<div id="home_site_links">
+			<a href="{% url treemap.views.result_map %}" id="home_explore">Explore Trees</a>
+			<a href="{% url treemap.views.tree_add %}" id="home_add">Add a Tree</a>
+				  <a href="{{ SITE_ROOT }}faq/" id="home_faq">How to use Asheville-TreeMap</a>
+			</div>
+
+			<div id="home_recent_additions">
+				<h3>Recent Additions</h3>
+				{% for photo in feeds.recent_photos %}
+				<a href="{% url treemap_tree_detail photo.tree.id %}"><img src="{% thumbnail photo.photo 60x65 crop upscale %}"></a>
+				{% endfor %}       
+			</div>      
+
+			<div id="home_promo">
+				<h4>AshevilleTreeMap is proud to support the Asheville Tree Commision.</h4>
+				<a href="http://www.ashevillenc.gov/Departments/CityClerk/BoardsCommissions/TreeCommission.aspx" target="_blank" class="highlight">Learn More</a>
+			</div>             
+			-->
+		</div>
+
+
+    
+
+           <div class="clear_both"></div> 
+
+
+ 
+
+
+
+			</div>
+
+
+
+
+            </div>
+    
+
+		</div>
+		
+
+
+
+
+    
+    
+{% endblock %}
+
+

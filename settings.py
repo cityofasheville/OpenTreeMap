@@ -2,8 +2,9 @@ import os
 
 #from settings_philadelphia import *
 #from settings_sanfrancisco import *
-from settings_greenprint import *
+#from settings_greenprint import *
 #from settings_dctreekit import *
+from settings_asheville import *
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -81,7 +82,6 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'classfaves',
     'qs_tiles',
-    'treekey',
     'badges',
     'pagination',
     'django_sorting',

@@ -87,16 +87,31 @@ def location_map(request):
 
 def home_feeds(request):
     feeds = {}
-    recent_trees = Tree.history.filter(present=True).order_by("-last_updated")[0:3]
-    
-    feeds['recent_edits'] = unified_history(recent_trees)
+    recent_trees = Tree.history.filter(present=True).order_by("-last_updated")[0:5]
+    latest_trees = Tree.objects.filter(present=True).order_by("-last_updated")[0:5]
+     
+    feeds['latest_trees'] = latest_trees
     feeds['recent_photos'] = TreePhoto.objects.exclude(tree__present=False).order_by("-reported")[0:7]
-    feeds['species'] = Species.objects.order_by('-tree_count')[0:4]
-    
+    feeds['species'] = Species.objects.order_by('-tree_count')[0:10]
+    feeds['benefits'] =  get_all_benefits(request)
     #TODO: change from most populated neighborhood to most updates in neighborhood
     feeds['active_nhoods'] = Neighborhood.objects.order_by('-aggregates__total_trees')[0:6]
     
     return render_to_response('treemap/index.html', RequestContext(request,{'feeds': feeds}))
+
+def history_feed(trees):
+    recent_edits = []
+    for t in trees:
+        if t._audit_change_type == "I":
+            edit = "New Tree"
+        else:
+            if t._audit_diff:
+                edit = clean_key_names(t._audit_diff)
+            else:
+                edit = ""
+        recent_edits.append((t.neighborhoods,t.last_updated_by.username,t.species,t.last_updated, edit))
+    # sort by the date descending
+    return sorted(recent_edits, key=itemgetter(1), reverse=True)
 
 def get_all_csv(request):
     csv_f = open(os.path.join(os.path.dirname(__file__), '../All_Trees.csv'))
@@ -109,6 +124,74 @@ def get_all_kmz(request):
     response = HttpResponse(csv_f, mimetype='application/vnd.google-earth.kmz')
     response['Content-Disposition'] = 'attachment; filename=All_Trees.kmz'
     return response
+
+def get_all_benefits(request):
+    maximum_trees_for_summary = 2000000
+    maximum_trees_for_display = 2000000
+    
+    trees, geog_obj, tile_query = _build_tree_search_result(request)
+    trees = Tree.objects.filter(present=True).all()
+    geography = None
+    summaries, benefits = None, None
+    if geog_obj:
+        summaries, benefits = get_summaries_and_benefits(geog_obj)
+        if hasattr(geog_obj, 'geometry'):
+            geography = simplejson.loads(geog_obj.geometry.simplify(.0001).geojson)
+            geography['name'] = str(geog_obj)
+        else:
+            pass#geography = {}
+            #geography['name'] = ''
+    
+    #else we're doing the simple json route .. ensure we return summary info
+    tree_count = trees.count()
+    full_count = Tree.objects.count()
+    esj = {}
+    esj['total_trees'] = trees.count()
+    #print 'tree count', tree_count
+
+
+    if tree_count > maximum_trees_for_summary:
+        trees = []
+        if geog_obj:
+            esj = summaries
+            esj['benefits'] = benefits
+        else:
+            #someone selected a single species w/too many tree results.  dang....
+            # TODO - need to pull from cached results...
+            summaries = {}
+        
+
+    else:
+        esj['distinct_species'] = len(trees.values("species").annotate(Count("id")).order_by("species"))
+        #print 'we have %s  ..' % esj
+        #print 'aggregating..'
+
+        r = ResourceSummaryModel()
+        
+        with_out_resources = trees.filter(treeresource=None).count()
+        #print 'without resourcesums:', with_out_resources
+        resources = tree_count - with_out_resources
+        #print 'have resourcesums:', resources
+        
+        EXTRAPOLATE_WITH_AVERAGE = True
+
+        for f in r._meta.get_all_field_names():
+            if f.startswith('total') or f.startswith('annual'):
+                fn = 'treeresource__' + f
+                s = trees.aggregate(Sum(fn))[fn + '__sum'] or 0.0
+                # TODO - need to make this logic accesible from shortcuts.get_summaries_and_benefits
+                # which is also a location where summaries are calculated
+                # also add likely to treemap/update_aggregates.py (not really sure how this works)
+                if EXTRAPOLATE_WITH_AVERAGE and resources:
+                    avg = float(s)/resources
+                    s += avg * with_out_resources
+                        
+                setattr(r,f,s)
+                esj[f] = s
+        esj['benefits'] = r.get_benefits()
+    response = esj
+    return response
+        
 
 #@cache_page(60*1)
 def result_map(request):
@@ -230,6 +313,7 @@ def tree_location_search(request):
                              'photo',
                              'last_updated_by_id',
                              'data_owner_id',
+                             'tree_owner',
                              'flowering',
                              'present',
                              'owner_additional_properties',
@@ -342,6 +426,8 @@ def trees(request, tree_id=''):
     else:
         return render_to_response('treemap/tree_detail.html',RequestContext(request,{'favorite': favorite, 'tree':first, 'recent': recent_edits}))
      
+
+
 
 def unified_history(trees):
     recent_edits = []
@@ -1023,7 +1109,8 @@ def _build_tree_search_result(request):
                      'project2' : '2',
                      'project3' : '3',
                      'project4' : '4',
-                     'project5' : '5'}
+                     'project5' : '5',
+                     'project6' : '6'}
     for k in tree_criteria.keys():
         v = request.GET.get(k,'')
         if v:
@@ -1147,7 +1234,8 @@ def _build_tree_search_result(request):
         if len(s_cql) > 0:
             tile_query.append("(" + " OR ".join(s_cql) + ")")
             trees = trees.filter(sidewalk_damage__in=s_list)
-        
+
+
 
     missing_powerlines = request.GET.get("missing_powerlines", '')
     if missing_powerlines:
@@ -1185,6 +1273,20 @@ def _build_tree_search_result(request):
         for u in users:
             user_list.append("steward_user_id = " + u.id.__str__())
         tile_query.append("(" + " OR ".join(user_list) + ")")
+
+
+
+    tree_owner = request.GET.get("tree_owner", "")
+    if tree_owner:
+        tree_owner_key='none'
+        tree_owner_choices = choices.get_field_choices('tree_owner')
+        for key,value in tree_owner_choices:
+            if str(value) == tree_owner:
+                tree_owner_key=key
+                break
+        trees = trees.filter(tree_owner__icontains=tree_owner_key)
+        tile_query.append("tree_owner LIKE '%" + tree_owner_key + "%'")
+
 
     owner = request.GET.get("owner", "")
     if owner:

@@ -3,7 +3,7 @@ import os, sys
 # Redirect stdout to stderr to avoid annoying crashes
 sys.stdout = sys.stderr
 
-sys.path.insert(0, '/home/azavea/UrbanForestMap')
+sys.path.insert(0, '/var/www/OpenTreeMap')
 
 main_path = os.path.split(os.path.split(os.path.realpath(__file__))[0])[0]
 sys.path.insert(0, main_path)

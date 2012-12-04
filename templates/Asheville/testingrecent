@@ -1,0 +1,43 @@
+    
+	<div class="content"> 
+	<div class="twocolumns"> 
+
+				<div class="box-1">
+					<h2>Recent updates</h2>
+					<p>Our database of trees comes from public records and citizen foresters like you.
+					    Your help will make it better. <!--<a href="#">Find out how to add and edit trees near you!</a>-->
+					</p>
+					<table width="100%">
+						{% for tree in latest_trees %}
+						    <tr>
+							<td class="image"><a href="{% url treemap_tree_detail tree.id %}">
+
+							{% if tree.last_updated_by.get_profile.photo %}
+							    <img src="{% thumbnail tree.last_updated_by.get_profile.photo 32x32 crop %}"
+								alt="image description" width="33" height="32" /></td>
+							{% else %}
+							    <img src="{{ STATIC_URL }}images/v2/defaultuser.gif" alt="image description" width="33" height="32" /></td>
+							{% endif %}
+
+							<td>
+							    <span>Neighborhood</span>  <br />
+
+							    {{tree.neighborhood.all.0}}
+							</td>
+							<td>
+							    <span>Tree species</span>  <br />
+
+							    <em>{{tree.species.common_name}}</em>
+							</td>
+							<td>
+							    <span>Updated by</span>  <br />
+
+							    <a href="{% url profiles.views.profile_detail tree.last_updated_by.username %}">{{ tree.last_updated_by.username }}</a>
+							</td>
+						    </tr>
+						{% endfor %}
+					</table>
+				</div>
+
+	</div>
+	</div>

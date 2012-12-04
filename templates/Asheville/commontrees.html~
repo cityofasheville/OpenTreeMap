@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Asheville Tree Map{% block title %}{% endblock %}</title>
+
+     {% block tophead %}
+        {% endblock %}
+        <script type="text/javascript" src="{{ STATIC_URL }}all_misc.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}jquery/jquery.jeditable.min.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}jquery/jquery.query-2.1.7.js"></script>
+        <script type="text/javascript" src="{{ STATIC_URL }}treemap.js"></script>
+
+        <link href='http://fonts.googleapis.com/css?family=Questrial' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="{{ STATIC_URL }}css/treemap.css" type="text/css"/>
+
+        <link rel="stylesheet" href="{{ STATIC_URL }}jquery/ui/css/ui-lightness/jquery-ui-1.8rc3.custom.css" type="text/css"/>
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}jquery/jquery.autocomplete.css" />
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/ptm.css" media="all" />
+        <link rel="shortcut icon" href="{{ STATIC_URL }}images/favicon.ico" /> 
+
+        <!--<link type="text/css" href="http://jqueryui.com/latest/themes/base/jquery.ui.all.css" rel="stylesheet" />-->
+      <!--[if IE]>
+                <link rel="stylesheet" href="{{ STATIC_URL }}css/ptm.ie.css" type="text/css"/>
+              <![endif]-->
+      
+      <!--[if lte IE 8]>
+                <link rel="stylesheet" href="{{ STATIC_URL }}css/ptm.ie8.css" type="text/css"/>
+              <![endif]-->
+
+        {% block js_ready %}
+        <script type="text/javascript">
+            jQuery().ready(tm.baseTemplatePageLoad);
+        </script>
+        {% endblock %}
+
+        {% block extrahead %}
+        {% endblock %}
+ <!--
+                <script type="text/javascript">
+                        var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-23175691-1']);
+            _gaq.push(['_trackPageview']);
+
+            (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+                </script>
+-->
+</head>
+
+<body {% block body_load %}{% endblock %} {% block body_id %}{% endblock %} class="{%block body_class%}base_body{%endblock %}">
+    <div id="wrapper">
+
+<!-- start: header -->
+
+                {% include "header.html" %}   
+        <div id="home">
+ 
+        	<div id="t4_top_content">
+          
+
+            
+          <div id="home_content">  
+            <h1>Mapping Asheville's trees and growing a green future together</h1>
+            
+            <h2>AshevilleTreeMap is a web-based map database of trees in the greater Asheville region.</h2>
+            
+         
+              <div id="home_callouts">
+                  <div id="home_tree_stats" class="home_container">
+                    <h3>Most Common Trees</h3>
+                      {% for trees in feeds.species %}
+                      <div class="tree_stat_group">
+                        <a class="tree_link" href="{% url treemap.views.result_map %}#?species={{trees.id}}">{{trees}}&nbsp;&raquo;</a>
+                        <a class="tree_stat" href="{% url treemap.views.result_map %}#?species={{trees.id}}">{{trees.tree_count}} </a>
+                      </div>
+                      {% endfor %}
+                  </div>    
+                  
+                  <div id="home_tree_hoods" class="home_container">
+                    <h3>Active Neighborhoods</h3>
+                      <div id="hood_list">
+                    {% for nhood in feeds.active_nhoods %}
+                        <a class="tree_link" href="{% url treemap.views.result_map %}#/?location={{nhood}}">{{nhood}}&nbsp;&raquo;</a>
+                    {% endfor %}     
+                    </div>
+                  </div>
+             </div>
+
+    
+    
+{% endblock %}
+
+

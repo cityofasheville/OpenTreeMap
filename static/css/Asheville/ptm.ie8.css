@@ -1,0 +1,16 @@
+.home_container, .content {
+  /*border: 1px solid #74aeb1;*/
+}
+
+ul#searchBoxes {border-bottom: 0px solid #F1F7E4;}
+
+#searchBox {
+ /* 
+ this breaks the search-related drop-down panels
+ filter:progid:DXImageTransform.Microsoft.Shadow(color='#60abaf', Direction=135, Strength=3); */
+ 
+}
+
+
+#popupContainer ul {width:500px,height:500px;}
+

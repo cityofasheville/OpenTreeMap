@@ -7,7 +7,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.contrib.gis.geos import Point
 from django.contrib.gis.gdal import SpatialReference, CoordTransform
 from django.contrib.auth.models import User
-from UrbanForestMap.treemap.models import Species, Tree, Neighborhood, ZipCode, TreeFlags, Choices, ImportEvent
+from OpenTreeMap.treemap.models import Species, Tree, Neighborhood, ZipCode, TreeFlags, Choices, ImportEvent
 
 class Command(BaseCommand):
     args = '<input_file_name, data_owner_id, base_srid>'
@@ -49,8 +49,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:    
             self.file_name = args[0]
-            in_file = dirname(__file__) + "/" + self.file_name
-            err_file = dirname(__file__) + "/" + self.file_name + ".err"
+            in_file =  self.file_name
+            err_file =  self.file_name + ".err"
             self.verbose = options.get('verbose')
             self.user_id = args[1]
             if len(args) > 2:
@@ -111,7 +111,7 @@ class Command(BaseCommand):
 
         ok = x and y
         if not ok:
-            self.log_error("  Invalid coords", row)
+            self.log_error("  coords ok", row)
         self.log_verbose("  Passed coordinate check")
         return (ok, x, y)
 

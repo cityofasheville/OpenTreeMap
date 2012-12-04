@@ -6,6 +6,8 @@
 {% block body_load %}{% endblock %}
 {% block form %}
 
+<div><p>Please review the <a href="{{ SITE_ROOT }}terms/" target="_blank">terms and conditions</a> regarding the use of Asheville Tree Map by signing up for a login you are aknowledging that you read and understand the terms and conditions</p></div>
+
 {% with SITE_ROOT|add:"/accounts/profile/" as next_page %}
 <form id="form1" {% if form.is_multipart %}enctype="multipart/form-data"{% endif %} name="form1" method="post" action="?next={{ next|default:next_page }}">
 {% endwith %}

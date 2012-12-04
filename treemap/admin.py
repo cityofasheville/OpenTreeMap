@@ -6,6 +6,10 @@ from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from django.db import models as dmodels
 import models
 
+from django.contrib.admin.views import main as admin_views_main
+admin_views_main.MAX_SHOW_ALL_ALLOWED = 10000
+admin_views_main.list_per_page = 10000
+
 mods = [x for x in models.__dict__.values() if issubclass(type(x), dmodels.base.ModelBase)]
  
 admins = []

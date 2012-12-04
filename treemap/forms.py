@@ -48,6 +48,8 @@ class TreeAddForm(forms.Form):
     power_lines = forms.TypedChoiceField(choices=Choices().get_field_choices('powerline_conflict_potential'), required=False)
     sidewalk_damage = forms.ChoiceField(choices=Choices().get_field_choices('sidewalk_damage'), required=False)
     condition = forms.ChoiceField(choices=Choices().get_field_choices('condition'), required=False)
+    tree_owner = forms.ChoiceField(choices=Choices().get_field_choices('tree_owner'), required=False)
+    steward_name = forms.ChoiceField(choices=Choices().get_field_choices('steward_name'), required=False)
     canopy_condition = forms.ChoiceField(choices=Choices().get_field_choices('canopy_condition'), required=False)
     target = forms.ChoiceField(required=False, choices=[('addsame', 'I want to add another tree using the same tree details'), ('add', 'I want to add another tree with new details'), ('edit', 'I\'m done!')], initial='edit', widget=forms.RadioSelect)        
 
@@ -63,7 +65,8 @@ class TreeAddForm(forms.Form):
             self.fields['plot_width_in'].choices.insert(0, ('','Select Inches...' ) )
             self.fields['plot_length'].choices.insert(0, ('','Select Feet...' ) )
             self.fields['plot_length_in'].choices.insert(0, ('','Select Inches...' ) )
-
+            self.fields['tree_owner'].choices.insert(0, ('','Select One...' ) )
+            self.fields['steward_name'].choices.insert(0, ('','Select One...' ) )
 
     def clean(self):        
         cleaned_data = self.cleaned_data 
@@ -108,6 +111,8 @@ class TreeAddForm(forms.Form):
         geo_address = self.cleaned_data.get('geocode_address')
         if geo_address:
             new_tree.geocoded_address = geo_address
+
+
         if city:
             new_tree.address_city = city
         zip_ = self.cleaned_data.get('edit_address_zip')
@@ -153,6 +158,12 @@ class TreeAddForm(forms.Form):
         canopy_condition = self.cleaned_data.get('canopy_condition')
         if canopy_condition:
             new_tree.canopy_condition = canopy_condition
+        tree_owner = self.cleaned_data.get('tree_owner')
+        if tree_owner:
+            new_tree.tree_owner = tree_owner
+        steward_name = self.cleaned_data.get('steward_name')
+        if steward_name:
+            new_tree.steward_name = steward_name
         
         import_event, created = ImportEvent.objects.get_or_create(file_name='site_add',)
         new_tree.import_event = import_event
@@ -160,6 +171,8 @@ class TreeAddForm(forms.Form):
         pnt = Point(self.cleaned_data.get('lon'),self.cleaned_data.get('lat'),srid=4326)
         new_tree.geometry = pnt
         new_tree.last_updated_by = request.user
+ 	new_tree.data_owner  = request.user
+ 	new_tree.owner_orig_id  = request.user
         new_tree.save()
         
         return new_tree
