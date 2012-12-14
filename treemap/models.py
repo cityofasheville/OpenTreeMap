@@ -92,7 +92,7 @@ class BenefitValues(models.Model):
 
 class Choices(models.Model):
     field = models.CharField(max_length=255, choices=choices_choices)
-    key = models.CharField(max_length=50)
+    key = models.CharField(max_length=255)
     value = models.CharField(max_length=255)
     key_type = models.CharField(max_length=15)
     
