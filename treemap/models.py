@@ -12,7 +12,7 @@ from classfaves.models import FavoriteBase
 import logging
 import audit
 import simplejson 
-
+ 
 RESOURCE_NAMES = ['Hydro interception',
                      'AQ Ozone dep',
                      'AQ NOx dep',
