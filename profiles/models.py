@@ -2,7 +2,7 @@ from operator import itemgetter
 from django.contrib.auth.models import User, Group
 from django.utils.translation import ugettext_lazy as _ # internationalization translate call
 from django.contrib.gis.db import models
-from treemap.models import Tree, TreeFlags, TreePhoto, TreePending
+from myapp.treemap.models import Tree, TreeFlags, TreePhoto, TreePending
 from django_reputation.models import UserReputationAction
 from badges.models import Badge, BadgeToUser
 

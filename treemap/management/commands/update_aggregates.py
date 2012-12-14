@@ -2,7 +2,7 @@ import datetime
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connection, transaction
 from django.db.models import Count, Sum
-from OpenTreeMap.treemap import models 
+from treemap import models 
 
 
 class Command(BaseCommand):
