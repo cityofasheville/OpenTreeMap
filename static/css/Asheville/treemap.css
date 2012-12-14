@@ -4,7 +4,7 @@ height:370px;
 
 
 .shadowLeft {
-    background: url("/OpenTreeMap/static/images/ptm/map-shadow-left.png") no-repeat scroll -2px -2px transparent;
+    background: url("/static/images/ptm/map-shadow-left.png") no-repeat scroll -2px -2px transparent;
     bottom: 0;
     left: 0;
     position: absolute;
@@ -14,7 +14,7 @@ height:370px;
 }
 
 .shadowTop {
-    background: url("/OpenTreeMap/static/images/ptm/map-shadow-top.png") repeat-x scroll -2px -2px transparent;
+    background: url("/static/images/ptm/map-shadow-top.png") repeat-x scroll -2px -2px transparent;
     height: 11px;
     left: 9px;
     position: absolute;
