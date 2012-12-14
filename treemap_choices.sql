@@ -1,10 +1,3 @@
-DROP TABLE "public"."treemap_choices" CASCADE;
-BEGIN;
-CREATE TABLE "public"."treemap_choices" (    OGC_FID SERIAL,    CONSTRAINT "treemap_choices_pk" PRIMARY KEY (OGC_FID) );
-ALTER TABLE "public"."treemap_choices" ADD COLUMN "field" CHAR(255);
-ALTER TABLE "public"."treemap_choices" ADD COLUMN "value" CHAR(255);
-ALTER TABLE "public"."treemap_choices" ADD COLUMN "key" CHAR(255);
-ALTER TABLE "public"."treemap_choices" ADD COLUMN "key_type" VARCHAR;
 INSERT INTO "public"."treemap_choices" ("field", "value", "key", "key_type") VALUES ('factoid', 'Interesting Quote', '2', 'int');
 INSERT INTO "public"."treemap_choices" ("field", "value", "key", "key_type") VALUES ('factoid', 'How You Can Help', '3', 'int');
 INSERT INTO "public"."treemap_choices" ("field", "value", "key", "key_type") VALUES ('factoid', 'Editing', '4', 'int');
