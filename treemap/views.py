@@ -1625,7 +1625,7 @@ def contact(request):
             if cc_myself:
                 recipients.append(sender)
 
-            sender = 'dmichelson@ashevillenc.gov' #settings.DEFAULT_FROM_EMAIL
+            sender = 'no-reply@ashevilletreemap.org' #settings.DEFAULT_FROM_EMAIL
 
             from django.core.mail import send_mail
             send_mail(subject, message, sender, recipients)
