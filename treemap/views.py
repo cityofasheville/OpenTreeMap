@@ -1616,7 +1616,7 @@ def contact(request):
         form = ContactForm(request.POST) 
         if form.is_valid():
             subject = form.cleaned_data['subject']
-            sender = recipients#form.cleaned_data['sender']
+            sender = settings.CONTACT_EMAILS #form.cleaned_data['sender']
             message = 'The following feedback was submitted from %s  \n\n' % sender 
             message += form.cleaned_data['message']
             cc_myself = form.cleaned_data['cc_myself']
