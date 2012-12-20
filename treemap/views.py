@@ -1616,6 +1616,7 @@ def contact(request):
         form = ContactForm(request.POST) 
         if form.is_valid():
             subject = form.cleaned_data['subject']
+            testsender=form.cleaned_data['sender']
             sender = settings.DEFAULT_FROM_EMAIL #form.cleaned_data['sender']
             message = 'The following feedback was submitted from %s  \n\n' % sender 
             message += form.cleaned_data['message']
