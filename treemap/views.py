@@ -1616,8 +1616,7 @@ def contact(request):
         form = ContactForm(request.POST) 
         if form.is_valid():
             subject = form.cleaned_data['subject']
-            testsender=form.cleaned_data['sender']
-            sender = settings.DEFAULT_FROM_EMAIL #form.cleaned_data['sender']
+            sender=form.cleaned_data['sender']
             message = 'The following feedback was submitted from %s  \n\n' % sender 
             message += form.cleaned_data['message']
             cc_myself = form.cleaned_data['cc_myself']
@@ -1625,6 +1624,8 @@ def contact(request):
             recipients = settings.CONTACT_EMAILS
             if cc_myself:
                 recipients.append(sender)
+
+            sender = settings.DEFAULT_FROM_EMAIL
 
             from django.core.mail import send_mail
             send_mail(subject, message, sender, recipients)
