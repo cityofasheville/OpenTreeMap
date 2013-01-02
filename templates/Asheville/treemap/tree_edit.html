@@ -230,8 +230,8 @@
             <ul id="userImage">
                 <li>
 					{% if instance.treephoto_set.count %}
-						<a href="{{ SITE_ROOT }}{{ instance.treephoto_set.all|first|get:"photo"|get:"url" }}">
-							<img src="{{ SITE_ROOT }}{% thumbnail instance.treephoto_set.all|first|get:"photo" 181x119 crop upscale %}" alt="{{ instance.treephoto_set.all|first|get:"title" }}" title="{{ instance.treephoto_set.all|first|get:"title" }}" width="181" height="119" class="mainImage" />
+						<a href="{{ instance.treephoto_set.all|first|get:"photo"|get:"url" }}">
+							<img src="{% thumbnail instance.treephoto_set.all|first|get:"photo" 181x119 crop upscale %}" alt="{{ instance.treephoto_set.all|first|get:"title" }}" title="{{ instance.treephoto_set.all|first|get:"title" }}" width="181" height="119" class="mainImage" />
 						</a>
 						{% if perms.can_delete_tree %}
 							<div><a href="javascript:void(0)" onclick="tm.deletePhoto({{ instance.id }}, {{ instance.treephoto_set.all|first|get:'id' }}); return false;">delete?</a></div>
