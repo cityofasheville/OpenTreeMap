@@ -242,7 +242,7 @@
 						{% endif %}
 						<ul id="additionalImages">
 						{% for item in instance.treephoto_set.all|slice:"1:4" %}
-							<li><div><a href="{{ SITE_ROOT }}{{ item.photo.url }}"><img alt="{{ item.title }}" title="{{ item.title }}" src="{{ SITE_ROOT }}{% thumbnail item.photo 55x36 crop upscale %}" alt="image description" width="55" height="36" /></a>
+							<li><div><a href="{{ item.photo.url }}"><img alt="{{ item.title }}" title="{{ item.title }}" src="{% thumbnail item.photo 55x36 crop upscale %}" alt="image description" width="55" height="36" /></a>
 								{% if perms.can_delete_tree %}
 									<br><span><a href="javascript:void(0)" onclick="tm.deletePhoto({{ instance.id }}, {{ item.id }}); return false;">delete?</a></span>
 								{% endif %}
