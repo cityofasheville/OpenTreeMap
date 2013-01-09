@@ -13,12 +13,33 @@ tm.geo_layer = "asheville_trees"
 tm.geo_layer_style = ""
 tm.panoAddressControl = false;
 
+
+
+function detectmob() { 
+ if( navigator.userAgent.match(/Android/i)
+ || navigator.userAgent.match(/webOS/i)
+ || navigator.userAgent.match(/iPhone/i)
+ || navigator.userAgent.match(/iPad/i)
+ || navigator.userAgent.match(/iPod/i)
+ || navigator.userAgent.match(/BlackBerry/i)
+ || navigator.userAgent.match(/Windows Phone/i)
+ ){
+    return true;
+  }
+ else {
+    return false;
+  }
+}
+
+isMobile = detectmob();
+
 tm.init_base_map = function(div_id, controls){
     if (!div_id) {
         div_id = "map";
     };
     if (!controls) {
-        tm.map = new OpenLayers.Map(div_id, {
+        if(isMobile){
+	    tm.map = new OpenLayers.Map(div_id, {
             maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
             restrictedExtent: new OpenLayers.Bounds(-9352949.884372,4008577.702163,-8787275.141121,4611248.307428), 
             units: 'm',
@@ -29,11 +50,11 @@ tm.init_base_map = function(div_id, controls){
                        new OpenLayers.Control.Navigation(),
                        new OpenLayers.Control.ArgParser(),
                        new OpenLayers.Control.PanPanel(),
-                       new OpenLayers.Control.TouchNavigation({
+	               new OpenLayers.Control.TouchNavigation({
 			dragPanOptions: {
-				enableKinetic: true
+				enableKinetic: isMobile
 			},
-			pinchZoom: new  OpenLayers.Control.PinchZoom({autoActivate: true}),
+			pinchZoom: new  OpenLayers.Control.PinchZoom({autoActivate: isMobile}),
 			clickHandlerOptions: {
 				handleSingle: function(e){ 
 				var mapCoord = tm.map.getLonLatFromViewPortPx(e.xy);
@@ -46,6 +67,21 @@ tm.init_base_map = function(div_id, controls){
                        }),
                        new OpenLayers.Control.ZoomPanel()]
         });
+      }else{
+	    tm.map = new OpenLayers.Map(div_id, {
+            maxExtent: new OpenLayers.Bounds(-20037508.34, -20037508.34, 20037508.34, 20037508.34),
+            restrictedExtent: new OpenLayers.Bounds(-9352949.884372,4008577.702163,-8787275.141121,4611248.307428), 
+            units: 'm',
+            projection: new OpenLayers.Projection("EPSG:900913"),
+            displayProjection: new OpenLayers.Projection("EPSG:4326"),
+            controls: [
+	   	       new OpenLayers.Control.Attribution(),
+                       new OpenLayers.Control.Navigation(),
+                       new OpenLayers.Control.ArgParser(),
+                       new OpenLayers.Control.PanPanel(),
+                       new OpenLayers.Control.ZoomPanel()]
+        });
+      };
     }
     else {
         tm.map = new OpenLayers.Map(div_id, {
