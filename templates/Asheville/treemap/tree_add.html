@@ -27,8 +27,14 @@
         tm.init_add_map();
         //jQuery("#mapHolder").hide();
         //jQuery("#calloutContainer").hide();
-	jQuery.getJSON(tm_static + '/species/json/', function(species){
+	//jQuery.getJSON(tm_static + '/species/json/', function(species){
+        //    tm.speciesData = species;
+        //});
+        jQuery.getJSON(tm_static + '/species/json/', function(species){
             tm.speciesData = species;
+            tm.setupAutoComplete($('#id_species_name')).result(function(event, item) {
+                $("#id_species_id").val(item.symbol).change();
+            });
         });
 
         jQuery("#opt_field_group").hide();
@@ -66,9 +72,9 @@
 
 
 
-            tm.setupAutoComplete($('#id_species_name')).result(function(event, item) {
-                $("#id_species_id").val(item.symbol).change();
-            });
+            //tm.setupAutoComplete($('#id_species_name')).result(function(event, item) {
+            //    $("#id_species_id").val(item.symbol).change();
+            //});
 
 
 
