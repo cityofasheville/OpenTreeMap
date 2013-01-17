@@ -1666,8 +1666,8 @@ from django.core import serializers
 def verify_edits(request, audit_type='tree'):
         
     changes = []
-    trees = Tree.history.filter(present=True).filter(_audit_user_rep__lt=1000).filter(_audit_change_type__exact='U').exclude(_audit_diff__exact='').filter(_audit_verified__exact=0)
-    newtrees = Tree.history.filter(present=True).filter(_audit_user_rep__lt=1000).filter(_audit_change_type__exact='I').filter(_audit_verified__exact=0)
+    trees = Tree.history.filter(present=True).filter(_audit_user_rep__lt=10000).filter(_audit_change_type__exact='U').exclude(_audit_diff__exact='').filter(_audit_verified__exact=0)
+    newtrees = Tree.history.filter(present=True).filter(_audit_user_rep__lt=10000).filter(_audit_change_type__exact='I').filter(_audit_verified__exact=0)
     treeactions = []
     
     if 'username' in request.GET:
