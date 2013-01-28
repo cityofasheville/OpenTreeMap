@@ -152,8 +152,10 @@
                 <div class="clearLeft"></div>
                 <label class="opt_fields"> </label><div id="dbh_type">{{ form.dbh_type }}</div>
                 <div class="clearLeft"></div>
+    {% if user.reputation.reputation > 1000 %}                
                 <label class="opt_fields">{{form.height.label}}</label>{{ form.height }}
                 <div class="clearLeft"></div>
+    {% endif %}                
                 <label class="opt_fields">{{form.plot_length.label}}</label>{{ form.plot_length }}{{ form.plot_length_in }}
                 <div class="clearLeft"></div>
                 <label class="opt_fields">{{form.plot_width.label}}</label>{{ form.plot_width }}{{ form.plot_width_in }}
@@ -164,10 +166,12 @@
                 <div class="clearLeft"></div>
                 <label class="opt_fields">{{form.condition.label}}</label>{{ form.condition }}
                 <div class="clearLeft"></div>
+    {% if user.reputation.reputation > 1000 %}                
                 <label class="opt_fields">{{form.sidewalk_damage.label}}</label>{{ form.sidewalk_damage }}
                 <div class="clearLeft"></div>
                 <label class="opt_fields">{{form.tree_owner.label}}</label>{{ form.tree_owner }}
                 <div class="clearLeft"></div>
+    {% endif %}                
                 <label class="opt_fields">{{form.steward_name.label}}</label>{{ form.steward_name }}
             </div>
         </div> 
