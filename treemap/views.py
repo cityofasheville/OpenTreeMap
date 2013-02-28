@@ -87,8 +87,8 @@ def location_map(request):
 
 def home_feeds(request):
     feeds = {}
-    recent_trees = Tree.history.filter(present=True).order_by("-last_updated")[0:5]
-    latest_trees = Tree.objects.filter(present=True).order_by("-last_updated")[0:5]
+    recent_trees = Tree.history.filter(present=True).exclude(last_updated_by=1).order_by("-last_updated")[0:5]
+    latest_trees = Tree.objects.filter(present=True).exclude(last_updated_by=1).order_by("-last_updated")[0:5]
      
     feeds['latest_trees'] = latest_trees
     feeds['recent_photos'] = TreePhoto.objects.exclude(tree__present=False).order_by("-reported")[0:7]
