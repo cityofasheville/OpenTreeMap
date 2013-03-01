@@ -94,7 +94,7 @@ class TreeAddForm(forms.Form):
         try:
              dbh = float(dbh)
         except:
-             raise forms.ValidationError("DBH Must be a number!")
+             raise forms.ValidationError("Trunk size must be a number!")
 
         try:
              dbh = float(height)
