@@ -244,7 +244,7 @@ def result_map(request):
         if plot_l[0].plot_length < min_plot: min_plot = plot_l[0].plot_length
         if plot_l[plot_l.count()-1].plot_length > max_plot: max_plot = plot_l[plot_l.count()-1].plot_length
 
-    recent_trees = Tree.history.filter(present=True).order_by("-last_updated")[0:3]
+    recent_trees = Tree.history.filter(present=True).exclude(last_updated_by=1).order_by("-last_updated")[0:3]
 
     recent_edits = unified_history(recent_trees)
 
