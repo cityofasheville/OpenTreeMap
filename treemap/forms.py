@@ -72,6 +72,8 @@ class TreeAddForm(forms.Form):
         cleaned_data = self.cleaned_data 
         height = cleaned_data.get('height')
         canopy_height = cleaned_data.get('canopy_height') 
+        dbh = cleaned_data.get('dbh')
+
         try:
             point = Point(cleaned_data.get('lon'),cleaned_data.get('lat'),srid=4326)  
             nbhood = Neighborhood.objects.filter(geometry__contains=point)
@@ -89,6 +91,16 @@ class TreeAddForm(forms.Form):
         if canopy_height and height and canopy_height > height:
             raise forms.ValidationError("Canopy height cannot be larger than tree height.")
             
+        try:
+             dbh = float(dbh)
+        except:
+             raise forms.ValidationError("DBH Must be a number!")
+
+        try:
+             dbh = float(height)
+        except:
+             raise forms.ValidationError("height Must be a number!")
+
 
         return cleaned_data 
         
