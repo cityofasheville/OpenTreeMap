@@ -55,13 +55,13 @@
         <td style="vertical-align:top;"><a href="#" onclick="tm.editDiameter('#edit_dbh', '{{instance.dbh}}'); return false;"><img src="{{ STATIC_URL }}images/edit.png" class="editOption" /> </a></td>
         <script>var val = $("#edit_dbh").html(); if (val) { val = parseFloat(val); } if (val) { $("#edit_dbh").html(val.toFixed(1)) };</script>
     </tr> 
-    {% if user.reputation.reputation > 1000 %}
 	<tr>
     	<td class="col1 activeEditRowLabel">Tree height (feet)</td>
         <td class="activeEditRowValue" id="edit_height">{{ instance.height|default:"Click to edit"  }}</td>
         <td style="vertical-align:top;"><a href="#" onclick="$('#edit_height').trigger('click'); return false;"><img src="{{ STATIC_URL }}images/edit.png" class="editOption" /> </a></td>
             <script>tm.setupEdit("height", "Tree", {{instance.id}});</script>
     </tr> 
+    {% if user.reputation.reputation > 1000 %}
 	<tr>
     	<td class="col1 activeEditRowLabel">Canopy height (feet)</td>
         <td class="activeEditRowValue" id="edit_canopy_height">{{ instance.canopy_height|default:"Click to edit"  }}</td>
