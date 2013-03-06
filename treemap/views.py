@@ -1373,6 +1373,7 @@ def ogr_conversion(output_type, sql, extension=None):
     dbsettings = settings.DATABASES['default'] 
     tmp_dir = tempfile.mkdtemp() + "/trees" 
     host = dbsettings['HOST']
+    sql = sql.replace('SELECT ','SELECT  (SELECT max(common_name) from treemap_species as sp where sp.id =  \"treemap_tree\".\"species_id\") as common_name, (SELECT max(scientific_name) from treemap_species as sp where sp.id =  \"treemap_tree\".\"species_id\") as scientific_name,')
     if host == '':
         host = 'localhost'
     if extension != None:
